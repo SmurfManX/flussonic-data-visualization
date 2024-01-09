@@ -29,3 +29,12 @@ pip install datetime
 thumbnails; # <-- enable thumbnails for stream
 protocols api jpeg; # <-- enable api jpeg for stream
 ```
+## Screenshots
+
+### Web Dashboard
+![Web Dashboard](screenshots/web.png)
+*This screenshot shows the frontend of the application with its real-time data visualizations, dynamic channel previews, and overall layout.*
+
+### Backend API
+![Backend API](screenshots/api.png)
+*This image depicts the backend functionality, showcasing how data is processed and managed in the application.*
