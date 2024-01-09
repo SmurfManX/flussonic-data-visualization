@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Visualization</title>
+    <!-- Materialize CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <!-- Material Icons -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!-- Flag icon CSS for country flags -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/4.1.5/css/flag-icon.min.css">
+    <style>
+        body {
+            background-color: #f5f5f5;
+        }
+        .navbar {
+            background-color: #00796b;
+        }
+        .navbar .brand-logo {
+            margin: 0;
+            padding-left: 20px;
+        }
+        .main-container {
+            margin-top: 20px;
+        }
+        .card {
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            transition: transform 0.2s;
+        }
+        .card:hover {
+            transform: scale(1.02);
+        }
+        .card-title {
+            font-size: 1.2rem;
+        }
+        .card-content p {
+            font-size: 1.5rem;
+            margin-bottom: 0;
+        }
+        .footer {
+            background-color: #00796b;
+            padding: 10px 0;
+            text-align: center;
+            color: white;
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+        }
+        .channel-card {
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<nav class="navbar">
+    <div class="nav-wrapper">
+        <a href="#" class="brand-logo">Data Visualization</a>
+    </div>
+</nav>
+
+<div class="container main-container">
+    <h4 class="center-align">Live Data Overview</h4>
+
+    <div class="row">
+        <!-- Total Clients -->
+        <div class="col s12 m4">
+            <div class="card">
+                <div class="card-content">
+                    <span class="card-title"><i class="material-icons left">refresh</i>Last Update</span>
+                    <p>{{ data.last_update }}</p>
+                </div>
+            </div>
+        </div>
+        <!-- Total Clients -->
+        <div class="col s12 m4">
+            <div class="card">
+                <div class="card-content">
+                    <span class="card-title"><i class="material-icons left">group</i>Total Clients</span>
+                    <p>{{ data.total_client_count }}</p>
+                </div>
+            </div>
+        </div>
+        <!-- Live Clients -->
+        <div class="col s12 m4">
+            <div class="card">
+                <div class="card-content">
+                    <span class="card-title"><i class="material-icons left">live_tv</i>Live Clients</span>
+                    <p>{{ data.live_client_count }}</p>
+                </div>
+            </div>
+        </div>
+        <!-- DVR Clients -->
+        <div class="col s12 m4">
+            <div class="card">
+                <div class="card-content">
+                    <span class="card-title"><i class="material-icons left">settings_input_antenna</i>DVR Clients</span>
+                    <p>{{ data.dvr_client_count }}</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Protocols Visualization -->
+        {% for protocol, count in data.protocols.items() %}
+            <div class="col s12 m4">
+                <div class="card">
+                    <div class="card-content">
+                        <span class="card-title">{{ protocol.upper() }}</span>
+                        <p>{{ count }}</p>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+
+        <!-- Country Counts Visualization -->
+        {% for country, count in data.client_counts_by_country.items() %}
+            <div class="col s12 m4">
+                <div class="card">
+                    <div class="card-content">
+                        <span class="card-title">
+                            <span class="flag-icon flag-icon-{{ country.lower() }}"></span>
+                            {{ country }}
+                        </span>
+                        <p>{{ count }}</p>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+    <!-- Channels with Preview -->
+    <h5 class="center-align">Channels</h5>
+    <div class="row">
+        {% for channel, details in data.client_count_by_channels.items() %}
+            <div class="col s12 m3 channel-card">
+                <div class="card">
+                    <div class="card-image">
+                        <img id="img_{{ channel }}" src="{{ details.live_preview_url }}">
+                        <span class="card-title">{{ channel }}</span>
+                    </div>
+                    <div class="card-content">
+                        <p>Clients: {{ details.clients }}</p>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+
+<!-- Materialize JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+<script>
+    function refreshImages() {
+        {% for channel, details in data.client_count_by_channels.items() %}
+            var img = document.getElementById('img_{{ channel }}');
+            img.src = '{{ details.live_preview_url }}?' + new Date().getTime();
+        {% endfor %}
+    }
+    setInterval(refreshImages, 1000);
+
+    setTimeout(function(){
+        location.reload();
+    }, 60000);
+</script>
+</body>
+</html>
