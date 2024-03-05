@@ -13,7 +13,7 @@ SERVERS = [
 ]
 HTTPS_USER = "FLUSSONIC_WEB_USER"
 PASSWORD = "FLUSSONIC_WEB_PASSWORD"
-URL_TEMPLATE = "http://{user}:{password}@{server}:8001/streamer/api/v3/sessions"
+URL_TEMPLATE = "http://{user}:{password}@{server}:8001/streamer/api/v3/sessions?limit=5000"
 
 # Data aggregation
 all_ips = []
